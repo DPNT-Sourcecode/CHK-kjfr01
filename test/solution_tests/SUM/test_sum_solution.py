@@ -28,6 +28,3 @@ class TestSum:
         with pytest.raises(TypeError) as exc1:
             SumSolution().compute("hello", 2)
         assert "integers" in str(exc1.value).lower()
-
-
-

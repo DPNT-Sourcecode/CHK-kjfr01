@@ -12,4 +12,3 @@ class SumSolution:
             raise ValueError("Both numbers need to be between 0 and 100")
         # 4. Passes checks: return the sum
         return x + y
-
