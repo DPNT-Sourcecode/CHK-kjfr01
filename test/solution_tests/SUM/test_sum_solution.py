@@ -26,7 +26,8 @@ class TestSum:
     def test_string_input_raises(self):
         # Passing a string for either parameter should raise TypeError
         with pytest.raises(TypeError) as exc1:
-            SumSolution().compute("5", 2)
+            SumSolution().compute("hello", 2)
         assert "integers" in str(exc1.value).lower()
+
 
 
