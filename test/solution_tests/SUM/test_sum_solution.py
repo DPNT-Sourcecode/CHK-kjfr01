@@ -23,3 +23,10 @@ class TestSum:
             SumSolution().compute(0, 101)
         assert "between 0 and 100" in str(exc.value).lower()
 
+    def test_string_input_raises(self):
+        # Passing a string for either parameter should raise TypeError
+        with pytest.raises(TypeError) as exc1:
+            SumSolution().compute("5", 2)
+        assert "integers" in str(exc1.value).lower()
+
+
