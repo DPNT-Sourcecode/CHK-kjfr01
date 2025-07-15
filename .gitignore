@@ -32,6 +32,7 @@ env/
 venv/
 pyvenv/
 ENV/
+virtual_environment/
 
 # Unit testing
 coverage.xml
@@ -49,4 +50,5 @@ coverage.tdl
 .coverage
 jre/
 record/
+
 
