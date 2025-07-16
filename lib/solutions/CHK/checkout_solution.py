@@ -39,4 +39,3 @@ class CheckoutSolution:
                 total_price += count * unit_price
 
         return total_price
-
