@@ -19,5 +19,36 @@ class TestCheckoutBasic:
         assert CheckoutSolution().checkout("ABCD") == 115
     
     def test_invalid_skus_returns_minus_one(self):
-        # Any SKU outside A–D should return -1
+        # Any SKU outside A–D (and E) should return -1
         assert CheckoutSolution().checkout("sdjfhsdkfhgs") == -1
+
+
+class TestCheckoutPromotionsCHK2:
+    def test_five_As_special(self):
+        # Five 'A's trigger the 5-for-200 offer
+        assert CheckoutSolution().checkout("AAAAA") == 200
+
+    def test_six_As_5plus_one(self):
+        # Six 'A's = 5-for-200 + 1*50 = 250
+        assert CheckoutSolution().checkout("AAAAAA") == 250
+
+    def test_two_Es_without_B(self):
+        # Two 'E's cost 2*40 = 80 (free-B offer applies but there's no B in basket)
+        assert CheckoutSolution().checkout("EE") == 80
+
+    def test_two_Es_and_one_B(self):
+        # 'EEB': 2E = 80, gives 1 B free so B costs 0
+        assert CheckoutSolution().checkout("EEB") == 80
+
+    def test_two_Es_and_two_Bs(self):
+        # 'EEBB': 2E=80 gives 1 B free, so of the 2 B's one is free and one is paid at 30 => 110
+        assert CheckoutSolution().checkout("EEBB") == 110
+
+    def test_mixed_promotions_and_units(self):
+        # Combined A- and E-promotions: 'AAAAAEEBB'
+        #   AAAAA = 200
+        #   EE  = 80 gives 1 B free
+        #   BB  = 2 B's, but one free => 1*30
+        # Total = 200 + 80 + 30 = 310
+        assert CheckoutSolution().checkout("AAAAAEEBB") == 310
+
