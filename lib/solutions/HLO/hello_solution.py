@@ -3,6 +3,7 @@ class HelloSolution:
     
     # friend_name = unicode string
     def hello(self, friend_name):
-        # Requirement for HLO_R1: always greet the world
-        return "Hello, World!"
+        # HLO_R2: greet the given friend
+        return f"Hello, {friend_name}!"
+
 
