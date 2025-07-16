@@ -38,7 +38,7 @@ class CheckoutSolution:
         ('F', 3, 'F', 1),   # 3 F → pay for 2
         ('N', 3, 'M', 1),   # 3 N → 1 M free
         ('R', 3, 'Q', 1),   # 3 R → 1 Q free
-        ('U', 3, 'U', 1),   # 3 U → pay for 2
+        ('U', 4, 'U', 1),   # There was a misunderstanding here if it says '3U get one U free' this means you pay for 3 and get the fourth free'
     ]
 
     def checkout(self, sku_string):
@@ -71,5 +71,3 @@ class CheckoutSolution:
             total += qty * self.ITEM_UNIT_PRICES[sku]
 
         return total
-
-

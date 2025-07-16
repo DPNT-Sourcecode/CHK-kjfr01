@@ -131,15 +131,14 @@ class TestCheckoutPromotionsCHK4:
         assert CheckoutSolution().checkout("RRRQQ") == 180
 
     def test_U_self_free_promotion(self):
-        # 3U get 1 U free (pay for 2): UUU → 2*40 = 80
-        assert CheckoutSolution().checkout("UUU") == 80
-        # 4U → free 1, pay for 3 = 120
+        # “Buy 3 U, get 1 free” ⇒ need 4 to get 1 free
+        # 3 U’s: no free yet, 3*40 = 120
+        assert CheckoutSolution().checkout("UUU") == 120
+        # 4 U’s: 1 free, pay for 3*40 = 120
         assert CheckoutSolution().checkout("UUUU") == 120
 
     def test_invalid_non_string_input(self):
         # Non-string inputs must return -1
         assert CheckoutSolution().checkout(123) == -1
         assert CheckoutSolution().checkout(None) == -1
-
-
 
