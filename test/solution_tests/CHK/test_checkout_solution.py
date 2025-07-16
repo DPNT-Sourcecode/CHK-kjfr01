@@ -51,4 +51,3 @@ class TestCheckoutPromotionsCHK2:
         #   BB  = 2 B's, but one free => 1*30
         # Total = 200 + 80 + 30 = 310
         assert CheckoutSolution().checkout("AAAAAEEBB") == 310
-
