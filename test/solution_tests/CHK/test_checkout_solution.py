@@ -161,6 +161,3 @@ class TestCheckoutPromotionsCHK5:
     def test_non_group_items_unchanged(self):
         # G=20, I=35, J=60, L=90, O=10, W=20, Z=21 → total = 256
         assert CheckoutSolution().checkout("GIJLOWZ") == 256
-
-
-

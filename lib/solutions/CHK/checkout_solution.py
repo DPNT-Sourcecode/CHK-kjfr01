@@ -85,5 +85,3 @@ class CheckoutSolution:
             total += qty * self.ITEM_UNIT_PRICES[sku]
 
         return total
-
-
