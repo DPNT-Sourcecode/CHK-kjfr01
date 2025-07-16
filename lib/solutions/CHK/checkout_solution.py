@@ -1,41 +1,60 @@
 class CheckoutSolution:
+    # Unit price per SKU
+    ITEM_UNIT_PRICES = {
+        'A': 50,
+        'B': 30,
+        'C': 20,
+        'D': 15,
+        'E': 40,
+    }
 
-    # skus: a string where each character is an item code (SKU) in the basket
-    def checkout(self, skus):
-        # 1. Reject non-string inputs
-        if not isinstance(skus, str):
+    # Bulk-purchase discounts: SKU → list of (quantity_needed, total_price), sorted highest quantity first
+    ITEM_BULK_DISCOUNTS = {
+        'A': [(5, 200), (3, 130)],
+        'B': [(2, 45)],
+        'C': [],
+        'D': [],
+        'E': [],
+    }
+
+    # Cross-SKU promotions: for every required_qty of required_sku you get free_qty of free_sku
+    SKU_CROSS_PROMOTIONS = [
+        ('E', 2, 'B', 1),
+    ]
+
+    def checkout(self, sku_string):
+        """
+        Calculate total price for the basket defined by sku_string.
+        Returns -1 on invalid input or unknown SKU.
+        """
+        # 1. Validate input type
+        if not isinstance(sku_string, str):
             return -1
 
-        # 2. Define our price table and special offers
-        #    SKU → (unit_price, special_offer)
-        #    special_offer is either None or a tuple (quantity_for_discount, discounted_price)
-        price_table = {
-            'A': (50,  (3, 130)),  # 3 of item A cost 130
-            'B': (30,  (2, 45)),   # 2 of item B cost 45
-            'C': (20,  None),      # no specials for C
-            'D': (15,  None),      # no specials for D
-        }
-
-        # 3. Count how many of each item code we have, validating codes
-        item_counts = {}
-        for item_code in skus:
-            if item_code not in price_table:
+        # 2. Tally each SKU
+        counts = {}
+        for sku in sku_string:
+            if sku not in self.ITEM_UNIT_PRICES:
                 return -1
-            item_counts[item_code] = item_counts.get(item_code, 0) + 1
+            counts[sku] = counts.get(sku, 0) + 1
 
-        # 4. Calculate the total, applying special offers first
+        # 3. Apply cross-SKU promotions first
+        for required_sku, required_qty, free_sku, free_qty in self.SKU_CROSS_PROMOTIONS:
+            times_applicable = counts.get(required_sku, 0) // required_qty
+            total_free = times_applicable * free_qty
+            if free_sku in counts:
+                # reduce the payable count of the free SKU, but never below zero
+                counts[free_sku] = max(counts[free_sku] - total_free, 0)
+
+        # 4. Compute total with bulk discounts then unit prices
         total_price = 0
-        for item_code, count in item_counts.items():
-            unit_price, special_offer = price_table[item_code]
-
-            if special_offer:
-                offer_quantity, offer_price = special_offer
-                num_offers = count // offer_quantity
-                remainder = count % offer_quantity
-
-                total_price += num_offers * offer_price
-                total_price += remainder * unit_price
-            else:
-                total_price += count * unit_price
+        for sku, qty in counts.items():
+            # apply each bulk discount in descending order of quantity
+            for discount_qty, discount_price in self.ITEM_BULK_DISCOUNTS.get(sku, []):
+                num_discounts, qty = divmod(qty, discount_qty)
+                total_price += num_discounts * discount_price
+            # remaining items at standard unit price
+            total_price += qty * self.ITEM_UNIT_PRICES[sku]
 
         return total_price
+
