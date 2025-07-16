@@ -142,3 +142,62 @@ class TestCheckoutPromotionsCHK4:
         assert CheckoutSolution().checkout(123) == -1
         assert CheckoutSolution().checkout(None) == -1
 
+class TestCheckoutPromotionsCHK5:
+    # Updated K pricing and bulk:
+    def test_single_K(self):
+        # Unit price is now 70
+        assert CheckoutSolution().checkout("K") == 70
+
+    def test_two_Ks_bulk(self):
+        # 2K for 120 (not 150)
+        assert CheckoutSolution().checkout("KK") == 120
+
+    def test_three_Ks(self):
+        # 3K = 2-for-120 + 1*70 = 190
+        assert CheckoutSolution().checkout("KKK") == 190
+
+    # Basic group-of-3 across S,T,X,Y,Z:
+    def test_exact_group_of_3(self):
+        # Any three of S,T,X,Y,Z for 45
+        assert CheckoutSolution().checkout("STX") == 45
+        assert CheckoutSolution().checkout("XYZ") == 45
+        assert CheckoutSolution().checkout("YZS") == 45
+
+    def test_group_prefers_highest_priced(self):
+        # Given Z(21), S(20), T(20), X(17), pool sorted [Z, S, T, X]
+        # Group of 3 removes Z,S,T => 45 + leftover X@17 = 62
+        assert CheckoutSolution().checkout("STXZ") == 62
+
+    def test_group_with_five_items(self):
+        # STXYZ → pool [Z,S,T,Y,X]; remove Z,S,T => 45 + Y@20 + X@17 = 82
+        assert CheckoutSolution().checkout("STXYZ") == 82
+
+    def test_multiple_groups(self):
+        # 6-groupable items → two groups of 3 for 2*45=90
+        assert CheckoutSolution().checkout("STXYST") == 90
+
+    def test_group_and_individual_mix(self):
+        # 5 S’s: one group (45) + 2*20 = 85
+        assert CheckoutSolution().checkout("SSSSS") == 85
+
+    def test_group_and_other_skus(self):
+        # Include A(50) and groupable items: A + STX = 50 + 45 = 95
+        assert CheckoutSolution().checkout("ASTX") == 95
+
+    # Re–test U self‑free edge
+    def test_U_self_free_edge_ck5(self):
+        # 3 U’s still no free (need 4), so 3*40=120
+        assert CheckoutSolution().checkout("UUU") == 120
+        # 4 U’s: 1 free, pay 3*40=120
+        assert CheckoutSolution().checkout("UUUU") == 120
+        # 5 U’s: free 1, pay 4*40=160
+        assert CheckoutSolution().checkout("UUUUU") == 160
+
+    # Ensure non‑groupable, non‑discount SKUs remain correct
+    def test_non_group_items_unchanged(self):
+        assert CheckoutSolution().checkout("GIJLOWZ") == (
+            20 + 35 + 60 + 90 + 20 + 20 + 21
+        )
+
+
+
