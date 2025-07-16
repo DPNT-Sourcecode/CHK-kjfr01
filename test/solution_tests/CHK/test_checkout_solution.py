@@ -51,3 +51,28 @@ class TestCheckoutPromotionsCHK2:
         #   BB  = 2 B's, but one free => 1*30
         # Total = 200 + 80 + 30 = 310
         assert CheckoutSolution().checkout("AAAAAEEBB") == 310
+
+
+class TestCheckoutPromotionsCHK3:
+    def test_single_F(self):
+        assert CheckoutSolution().checkout("F") == 10
+
+    def test_two_Fs_no_free(self):
+        assert CheckoutSolution().checkout("FF") == 20
+
+    def test_three_Fs_one_free(self):
+        # 3 F’s → pay for 2*10 = 20
+        assert CheckoutSolution().checkout("FFF") == 20
+
+    def test_four_Fs(self):
+        # 4 F’s → 3 qualifies: pay 2 + 1 full: 2*10 + 1*10 = 30
+        assert CheckoutSolution().checkout("FFFF") == 30
+
+    def test_six_Fs_two_free(self):
+        # 6 F’s → two “3-for-2” groups → pay 4*10 = 40
+        assert CheckoutSolution().checkout("FFFFFF") == 40
+
+    def test_mixed_F_and_A(self):
+        # AAA=130 (3-for-130), plus FFF=20 → total 150
+        assert CheckoutSolution().checkout("AAAFFF") == 150
+

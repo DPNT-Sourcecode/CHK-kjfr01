@@ -6,6 +6,7 @@ class CheckoutSolution:
         'C': 20,
         'D': 15,
         'E': 40,
+        'F': 10, #New item F
     }
 
     # Bulk-purchase discounts: SKU → list of (quantity_needed, total_price), sorted highest quantity first
@@ -15,11 +16,13 @@ class CheckoutSolution:
         'C': [],
         'D': [],
         'E': [],
+        'F': [],            # F has no pure bulk tiers
     }
 
     # Cross-SKU promotions: for every required_qty of required_sku you get free_qty of free_sku
     SKU_CROSS_PROMOTIONS = [
         ('E', 2, 'B', 1),
+        ('F', 3, 'F', 1),  # for every 3 F’s, 1 is free (i.e. pay for 2)
     ]
 
     def checkout(self, sku_string):
@@ -57,3 +60,4 @@ class CheckoutSolution:
             total_price += qty * self.ITEM_UNIT_PRICES[sku]
 
         return total_price
+
